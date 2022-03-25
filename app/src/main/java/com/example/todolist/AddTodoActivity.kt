@@ -2,9 +2,11 @@ package com.example.todolist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.todolist.databinding.ActivityAddTodoBinding
 import com.example.todolist.db.AppDatabase
 import com.example.todolist.db.ToDoDao
+import com.example.todolist.db.ToDoEntity
 
 class AddTodoActivity : AppCompatActivity() {
 
@@ -43,6 +45,20 @@ class AddTodoActivity : AppCompatActivity() {
             else -> {
                 todoImportance = -1
             }
+        }
+
+        if(todoImportance == -1 || todoTitle.isBlank()){
+            Toast.makeText(this, "모든 항목을 채워주세요",
+            Toast.LENGTH_SHORT).show()
+        }else{
+            Thread{
+                todoDao.insertTodo(ToDoEntity(null, todoTitle, todoImportance))
+                runOnUiThread {
+                    Toast.makeText(this, "추가되었습니다.",
+                    Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }.start()
         }
     }
 }
